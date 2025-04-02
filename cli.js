@@ -5,7 +5,7 @@ const StakingContract = require('./index');
 const printUsage = () => {
   console.log('Usage: node cli.js <command> [arguments]');
   console.log('\nCommands:');
-  console.log('  stake <amount>            - Stake the specified amount');
+  console.log('  stake <amount>            - Stake the specified amount (minimum 10000000)');
   console.log('  unstake <amount>          - Unstake the specified amount');
   console.log('  getStakedBalance         - Get your staked balance');
   console.log('  registerBLSPublicKey <key> - Register BLS public key');
@@ -25,8 +25,8 @@ const main = async () => {
 
     switch (command.toLowerCase()) {
       case 'stake':
-        if (!args[0]) {
-          console.error('Error: Amount required for staking');
+        if (!args[0] || Number(args[0]) < 10000000) {
+          console.error('Error: Amount must be at least 10000000');
           process.exit(1);
         }
         const stakeTx = await contract.stake(args[0]);
@@ -34,11 +34,7 @@ const main = async () => {
         break;
 
       case 'unstake':
-        if (!args[0]) {
-          console.error('Error: Amount required for unstaking');
-          process.exit(1);
-        }
-        const unstakeTx = await contract.unstake(args[0]);
+        const unstakeTx = await contract.unstake();
         console.log('Unstake transaction:', unstakeTx.hash);
         break;
 
