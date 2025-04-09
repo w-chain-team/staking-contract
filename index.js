@@ -16,9 +16,6 @@ class StakingContract {
   }
 
   async stake(amount) {
-    if (amount < 10000000) {
-      throw new Error('Minimum stake amount is 10000000');
-    }
     const amountInEther = ethers.parseEther(amount.toString());
     const signerBalance = await this.provider.getBalance(this.signer.address);
     

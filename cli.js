@@ -5,11 +5,11 @@ const StakingContract = require('./index');
 const printUsage = () => {
   console.log('Usage: node cli.js <command> [arguments]');
   console.log('\nCommands:');
-  console.log('  stake <amount>            - Stake the specified amount (minimum 10000000)');
-  console.log('  unstake <amount>          - Unstake the specified amount');
-  console.log('  getStakedBalance         - Get your staked balance');
+  console.log('  stake <amount>             - Stake the specified amount');
+  console.log('  unstake                    - Unstake all staked token at once');
+  console.log('  getStakedBalance           - Get your staked balance');
   console.log('  registerBLSPublicKey <key> - Register BLS public key');
-  console.log('  isValidator <address>     - Check if address is a validator');
+  console.log('  isValidator <address>      - Check if address is a validator');
 };
 
 const main = async () => {
@@ -25,12 +25,13 @@ const main = async () => {
 
     switch (command.toLowerCase()) {
       case 'stake':
-        if (!args[0] || Number(args[0]) < 10000000) {
-          console.error('Error: Amount must be at least 10000000');
-          process.exit(1);
-        }
+        console.log('Staking ', args[0], ' WCO...');
+        console.log('Minimum Staked required to activate Validator Node is 10M WCO');
         const stakeTx = await contract.stake(args[0]);
         console.log('Stake transaction:', stakeTx.hash);
+        console.log('Fetching Staked WCO for this account...');
+        const newBalance = await contract.getStakedBalance();
+        console.log('Staked balance:', newBalance);
         break;
 
       case 'unstake':
